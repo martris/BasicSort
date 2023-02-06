@@ -1,0 +1,24 @@
+public class InsertSort {
+    public static void insertSort(int[] arr) {
+        if (arr.length < 2 || arr == null) {
+            return;
+        }
+        for (int i = 1; i < arr.length; i++) {
+            int stick = i;
+            int j = i - 1;
+            while (j > -1 && (arr[stick] < arr[j])) {
+                swap(arr, stick--, j);
+                j = stick - 1;
+            }
+        }
+    }
+
+    public static void swap(int[] arr, int i, int j) {
+        if ((!(i > -1 && i < arr.length)) || (!(j > -1 && j < arr.length))) {
+            return;
+        }
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    }
