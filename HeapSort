@@ -1,0 +1,78 @@
+package BasicSort;
+
+import Utils.Comparator;
+import Utils.Swap;
+
+public class HeapSort {
+    public static void heapSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+        int size = arr.length;
+        int heapsize = 1;
+//        while (heapsize < size + 1) { //O(N)
+//            heapinsert(arr, heapsize-1); //O(logN)
+//            heapsize++;
+//        }
+//更快的一次性调整成堆的方式 
+        for (int i = size - 1; i >= 0; i--) {
+            heapify(arr, i, size);
+        }
+        heapsize = size;
+        //O(N)
+        while (heapsize > 0) {
+            Swap.swap(arr, heapsize - 1, 0);
+            heapsize--;
+            //O(logN)
+            heapify(arr, 0, heapsize);
+        }
+    }
+
+    //    插入到某个索引位置下的数，保持其余结构继续为大根堆
+    public static void heapinsert(int[] arr, int index) {
+        while (arr[index] > arr[(index - 1) / 2]) {
+            Swap.swap(arr, index, (index - 1) / 2);
+            index = (index - 1) / 2;
+        }
+    }
+
+    public static void heapify(int[] arr, int index, int heapsize) {
+        int left = 2 * index + 1;
+        while (left < heapsize) {
+            //找到最大值孩子的下标
+            int thelargest = left + 1 < heapsize ? maxIndex(arr, left, left + 1) : left;
+            //判断于其父的大小
+            if (arr[thelargest] <= arr[index]) {
+                break;
+            }
+            Swap.swap(arr, index, thelargest);
+            index = thelargest;
+            left = 2 * index + 1;
+        }
+    }
+
+    public static int maxIndex(int[] arr, int a, int b) {
+        return (arr[a] > arr[b] ? a : b);
+    }
+
+    public static void main(String[] args) {
+        int testtime = 500000;
+        int maxSize = 100;
+        int maxValue = 100;
+        boolean isSucceed = true;
+        for (int i = 0; i < testtime; i++) {
+            int[] arr1 = Comparator.geneateRamdomArray(maxSize, maxValue);
+            int[] arr2 = Comparator.copyArray(arr1);
+            Comparator.compatator(arr1);
+            heapSort(arr2);
+            if (!Comparator.isEqual(arr1, arr2)) {
+                isSucceed = false;
+//                for(int a : arr1){
+//                    System.out.println(a);
+//                }
+                break;
+            }
+        }
+        System.out.println(isSucceed ? "Nice!" : "Fucking fucked!");
+    }
+}
